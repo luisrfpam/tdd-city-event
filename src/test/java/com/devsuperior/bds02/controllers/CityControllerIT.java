@@ -32,15 +32,26 @@ public class CityControllerIT {
 	
 	@Test
 	public void findAllShouldReturnAllResourcesSortedByName() throws Exception {
-		
+		/* Código antigo
 		ResultActions result =
 				mockMvc.perform(get("/cities")
 					.contentType(MediaType.APPLICATION_JSON));
 
 		result.andExpect(status().isOk());
+		 
 		result.andExpect(jsonPath("$[0].name").value("Belo Horizonte"));
 		result.andExpect(jsonPath("$[1].name").value("Belém"));
 		result.andExpect(jsonPath("$[2].name").value("Brasília"));
+		*/
+		
+		// Novo código usando o pageable 14-04-2022
+		ResultActions result =
+				mockMvc.perform(get("/cities?page=0$size=10&sort=name,asc")
+					.contentType(MediaType.APPLICATION_JSON));		
+		result.andExpect(status().isOk());
+		result.andExpect(jsonPath("$.content[0].name").value("Belo Horizonte"));
+		result.andExpect(jsonPath("$.content[1].name").value("Belém"));
+		result.andExpect(jsonPath("$.content[2].name").value("Brasília"));
 	}
 	
 	@Test
